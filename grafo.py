@@ -95,6 +95,18 @@ class Grafo:
                     return False
         return True
 
+    def adjacentes_peso(self, u):
+        """Retorna a lista dos vertices adjacentes a u no formato (v, w)"""
+        return self.lista_adj[u]
+
+    def adjacentes(self, u):
+        """Retorna a lista dos vertices adjacentes a u"""
+        adj = []
+        for i in range(len(self.lista_adj[u])):
+            (v, w) = self.lista_adj[u][i]
+            adj.append(v)
+        return adj
+
     def busca_largura(self, s):
         """Retorna a ordem de descoberta dos vertices pela
            busca em largura a partir de s"""
@@ -171,5 +183,32 @@ class Grafo:
                             return True
         return False
 
+    def menorDistancia(self, s):
+        menor = -1
+
+        for v in self.lista_adj[s]: ## (1, 6)
+            if v < menor:
+                menor = v
+
+        return menor
+
+    def dijkstra(self, s):
+        dist = [9999 for v in self.lista_adj]
+        pred = [None for v in self.lista_adj]
+
+        dist[s] = 0
+        Q = self.lista_adj
+
+        while len(Q) != 0:
+            u = self.menorDistancia(s)
+            Q.pop(u)
+            for v in self.adjacentes_peso(u):
+                if dist[v] > dist[u] + len(self.adjacentes_peso(v)):
+                    dist[v] = dist[u] + len(self.adjacentes_peso(v))
+                    pred[v] = u
+
+        return Q
+
     def caminhoMinimo(self, nome_arq, u, v):
-        return
+        self.ler_arquivo(nome_arq)
+        print(self.dijkstra(u))
