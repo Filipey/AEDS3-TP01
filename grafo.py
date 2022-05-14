@@ -1,3 +1,6 @@
+import sys
+
+
 class Grafo:
 
     def __init__(self, num_vet=0, num_arestas=0, lista_adj=None, mat_adj=None):
@@ -74,7 +77,7 @@ class Grafo:
                 value = int(str[2])
                 self.addAresta(source, destiny, value)
         except IOError:
-            print("Erro")
+            sys.exit("O arquivo não está presente em /dataset")
 
     def densidade(self):
         # Calcula a densidade de um grafo num_arestas / num_vet * num_vet-1.
@@ -212,8 +215,37 @@ class Grafo:
                     dist[vertice] = dist[u] + peso
                     pred[vertice] = u
 
-        return Q
+        return
+
+    def bellmanFord(self, s):
+        dist = [float('inf') for v in range(len(self.lista_adj))]
+        pred = [None for v in range(len(self.lista_adj))]
+        vertices = [v for v in range(len(self.lista_adj))]
+        arestas = []
+
+        for el in vertices:
+            for e in self.lista_adj[el]:
+                arestas.append((el, e[0], e[1]))
+
+        dist[s] = 0
+
+        for i in range(0, len(self.lista_adj) - 1):
+            trocou = False
+            for e in arestas:
+                origem = e[0]
+                destino = e[1]
+                peso = e[2]
+                if dist[destino] > dist[origem] + peso:
+                    dist[destino] = dist[origem] + peso
+                    pred[destino] = origem
+                    trocou = True
+
+            if trocou is False:
+                break
+
+        return
 
     def caminhoMinimo(self, nome_arq, u, v):
         self.ler_arquivo(nome_arq)
         print(self.dijkstra(u))
+        print(self.bellmanFord(u))
