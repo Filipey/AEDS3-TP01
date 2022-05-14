@@ -1,6 +1,6 @@
 import sys
 import time
-from decimal import Decimal
+
 
 class Grafo:
 
@@ -154,8 +154,9 @@ class Grafo:
                     pred[vertice] = u
 
         fim = time.process_time()
-        print(f"O tempo de execução do algoritmo foi {fim - inicio} segundos")
-        return dist, pred
+        timestamp = fim - inicio
+
+        return dist, pred, timestamp
 
     def bellmanFord(self, s):
         inicio = time.process_time()
@@ -185,17 +186,42 @@ class Grafo:
                 break
 
         fim = time.process_time()
-        print(f"O tempo de execução do algoritmo foi {Decimal(inicio - fim)} segundos")
+        timestamp = fim - inicio
 
-        return dist, pred
+        return dist, pred, timestamp
+
+    @staticmethod
+    def formatData(nome_arq, u, v, data: tuple):
+        dist = data.__getitem__(0)
+        pred = data.__getitem__(1)
+        timestamp = data.__getitem__(2)
+        caminho = [v]
+
+        dist = dist[v]
+
+        i = pred[v]
+        while i in pred:
+            if i is None:
+                break
+            caminho.append(i)
+            i = pred[i]
+
+        caminho.reverse()
+
+        print(f"Arquivo de origem: {nome_arq}")
+        print(f"Origem: {u}")
+        print(f"Destino: {v}")
+        print(f"Caminho: {caminho}")
+        print(f"Custo: {dist}")
+        print(f"Tempo: {timestamp}")
 
     def caminhoMinimo(self, nome_arq, u, v):
         self.ler_arquivo(nome_arq)
 
         if not self.ponderado():
-            self.busca_largura_menor_dist(u)
+            self.formatData(nome_arq, u, v, self.busca_largura_menor_dist(u))
 
         if self.arestaNegativa():
-            self.bellmanFord(u)
+            self.formatData(nome_arq, u, v, self.bellmanFord(u))
 
-        self.dijkstra(u)
+        self.formatData(nome_arq, u, v, self.dijkstra(u))
