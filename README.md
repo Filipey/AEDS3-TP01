@@ -2,7 +2,7 @@
 
 ## Participantes
 - [Filipe Augusto Santos de Moura (Aluno)](https://github.com/Filipey)
-- [Gustavo Estevam Sena (Aluno)]()
+- [Gustavo Estevam Sena (Aluno)](https://github.com/Gultes)
 - [George Henrique Godim da Fonseca (Orientador)](https://github.com/georgehgfonseca)
 
 ## Objetivos
