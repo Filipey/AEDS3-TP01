@@ -90,23 +90,7 @@ class Grafo:
                     R.append(v)
                     desc[v] = 1
         return R
-
-    def busca_largura_menor_dist(self, s):
-        dist = [float('inf') for v in range(len(self.lista_adj))]
-        pred = [None for v in range(len(self.lista_adj))]
-
-        Q = [s]
-        dist[s] = 0
-
-        while len(Q) != 0:
-            u = Q.pop(0)
-            for (v, w) in self.lista_adj[u]:
-                if dist[v] == float('inf'):
-                    Q.append(v)
-                    dist[v] = dist[u] + 1
-                    pred[v] = u
-        return dist, pred;
-
+    
     def ponderado(self) -> bool:
         for v in self.mat_adj:
             for i in v:
@@ -134,6 +118,22 @@ class Grafo:
                 vertice = v
 
         return vertice
+    
+    def busca_largura_menor_dist(self, s):
+        dist = [float('inf') for v in range(len(self.lista_adj))]
+        pred = [None for v in range(len(self.lista_adj))]
+      
+        Q = [s]
+        dist[s] = 0
+
+        while len(Q) != 0:
+            u = Q.pop(0)
+            for (v, w) in self.lista_adj[u]:
+                if dist[v] == float('inf'):
+                    Q.append(v)
+                    dist[v] = dist[u] + 1
+                    pred[v] = u
+        return dist, pred
 
     def dijkstra(self, s):
         inicio = time.process_time()
@@ -219,9 +219,9 @@ class Grafo:
         self.ler_arquivo(nome_arq)
 
         if not self.ponderado():
-            self.formatData(nome_arq, u, v, self.busca_largura_menor_dist())
+            self.formatData(nome_arq, u, v, self.busca_largura_menor_dist(u))
 
         if self.arestaNegativa():
-            self.formatData(nome_arq, u, v, self.bellmanFord())
+            self.formatData(nome_arq, u, v, self.bellmanFord(u))
 
         self.formatData(nome_arq, u, v, self.dijkstra(u))
