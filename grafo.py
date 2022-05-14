@@ -1,5 +1,6 @@
 import sys
-
+import time
+from decimal import Decimal
 
 class Grafo:
 
@@ -24,20 +25,6 @@ class Grafo:
             self.num_arestas += 1
         else:
             print("Aresta Inválida")
-
-    def remove_aresta(self, source, destiny):
-        if source < self.num_vet and destiny < self.num_vet:
-            if self.mat_adj[source][destiny] != 0:
-                self.num_arestas -= 1
-                self.mat_adj[source][destiny] = 0
-                for (v2, w2) in self.lista_adj[source]:
-                    if v2 == destiny:
-                        self.lista_adj[source].remove((v2, w2))
-                        break
-            else:
-                print("Aresta inexistente!")
-        else:
-            print("Aresta invalida!")
 
     def grau(self, v: int) -> int:
         return len(self.lista_adj[v])
@@ -65,7 +52,6 @@ class Grafo:
             str = str.split(" ")
             self.num_vet = int(str[0])
             self.num_arestas = int(str[1])
-            print(f"Leitura numero de arestas: {self.num_arestas}")
             self.lista_adj = [[] for i in range(self.num_vet)]
             self.mat_adj = [[0 for i in range(self.num_vet)] for j in range(self.num_vet)]
 
@@ -78,25 +64,6 @@ class Grafo:
                 self.addAresta(source, destiny, value)
         except IOError:
             sys.exit("O arquivo não está presente em /dataset")
-
-    def densidade(self):
-        # Calcula a densidade de um grafo num_arestas / num_vet * num_vet-1.
-        numeroDeAresta = self.num_arestas
-        print(numeroDeAresta)
-        numeroVertice = self.num_vet
-        print(numeroVertice)
-        densidade = self.num_arestas / (self.num_vet * (self.num_vet - 1))
-
-        return float(densidade)
-
-    def subgrafo(self, g2):
-        if g2.num_vert > self.num_vet:
-            return False
-        for i in range(len(g2.mat_adj)):
-            for j in range(len(g2.mat_adj[i])):
-                if g2.mat_adj[i][j] != 0 and self.mat_adj[i][j] == 0:
-                    return False
-        return True
 
     def adjacentes_peso(self, u):
         """Retorna a lista dos vertices adjacentes a u no formato (v, w)"""
@@ -111,8 +78,6 @@ class Grafo:
         return adj
 
     def busca_largura(self, s):
-        """Retorna a ordem de descoberta dos vertices pela
-           busca em largura a partir de s"""
         desc = [0 for v in range(self.num_vet)]
         Q = [s]
         R = [s]
@@ -126,64 +91,36 @@ class Grafo:
                     desc[v] = 1
         return R
 
-    def busca_profundidade(self, s):
-        """Retorna a ordem de descoberta dos vertices pela
-           busca em profundidade a partir de s"""
-        desc = [0 for v in range(self.num_vet)]
-        S = [s]
-        R = [s]
-        desc[s] = 1
-        while S:
-            u = S[-1]
-            desempilhar = True
-            for (v, w) in self.lista_adj[u]:
-                if desc[v] == 0:
-                    desempilhar = False
-                    S.append(v)
-                    R.append(v)
-                    desc[v] = 1
-                    break
-            if desempilhar:
-                S.pop(-1)
-        return R
+    def busca_largura_menor_dist(self, s):
+        dist = [float('inf') for v in range(len(self.lista_adj))]
+        pred = [None for v in range(len(self.lista_adj))]
 
-    def conexo(self, s):
-        """Retorna Ture se o grafo e conexo e False caso contrario
-           baseado na busca em largura"""
-        desc = [0 for v in range(self.num_vet)]
         Q = [s]
-        R = [s]
-        desc[s] = 1
-        while Q:
+        dist[s] = 0
+
+        while len(Q) != 0:
             u = Q.pop(0)
             for (v, w) in self.lista_adj[u]:
-                if desc[v] == 0:
+                if dist[v] == float('inf'):
                     Q.append(v)
-                    R.append(v)
-                    desc[v] = 1
-        for i in range(len(desc)):
-            if desc[i] == 0:
-                return False
-        return True
+                    dist[v] = dist[u] + 1
+                    pred[v] = u
+        return dist, pred;
 
-    def ciclo(self, s):
-        """Retorna Ture se o grafo tem ciclo e False caso contrario
-           baseado na busca em largura"""
-        desc = [0 for v in range(self.num_vet)]
-        for s in range(self.num_vet):
-            if desc[s] == 0:
-                Q = [s]
-                R = [s]
-                desc[s] = 1
-                while Q:
-                    u = Q.pop(0)
-                    for (v, w) in self.lista_adj[u]:
-                        if desc[v] == 0:
-                            Q.append(v)
-                            R.append(v)
-                            desc[v] = 1
-                        else:
-                            return True
+    def ponderado(self) -> bool:
+        for v in self.mat_adj:
+            for i in v:
+                if i != 1 and i != 0:
+                    return True
+
+        return False
+
+    def arestaNegativa(self) -> bool:
+        for v in self.mat_adj:
+            for i in v:
+                if i < 0:
+                    return True
+
         return False
 
     @staticmethod
@@ -199,6 +136,7 @@ class Grafo:
         return vertice
 
     def dijkstra(self, s):
+        inicio = time.process_time()
         dist = [float('inf') for v in range(len(self.lista_adj))]
         pred = [None for v in range(len(self.lista_adj))]
 
@@ -215,9 +153,12 @@ class Grafo:
                     dist[vertice] = dist[u] + peso
                     pred[vertice] = u
 
-        return
+        fim = time.process_time()
+        print(f"O tempo de execução do algoritmo foi {fim - inicio} segundos")
+        return dist, pred
 
     def bellmanFord(self, s):
+        inicio = time.process_time()
         dist = [float('inf') for v in range(len(self.lista_adj))]
         pred = [None for v in range(len(self.lista_adj))]
         vertices = [v for v in range(len(self.lista_adj))]
@@ -243,9 +184,18 @@ class Grafo:
             if trocou is False:
                 break
 
-        return
+        fim = time.process_time()
+        print(f"O tempo de execução do algoritmo foi {Decimal(inicio - fim)} segundos")
+
+        return dist, pred
 
     def caminhoMinimo(self, nome_arq, u, v):
         self.ler_arquivo(nome_arq)
-        print(self.dijkstra(u))
-        print(self.bellmanFord(u))
+
+        if not self.ponderado():
+            self.busca_largura(u)
+
+        if self.arestaNegativa():
+            self.bellmanFord(u)
+
+        self.dijkstra(u)
