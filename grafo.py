@@ -26,25 +26,6 @@ class Grafo:
         else:
             print("Aresta Inválida")
 
-    def grau(self, v: int) -> int:
-        return len(self.lista_adj[v])
-
-    def regular(self) -> bool:
-        aux = self.grau(self.lista_adj)
-
-        for i in range(1, len(self.lista_adj)):
-            if self.grau(self.lista_adj, i) != aux:
-                return False
-
-        return True
-
-    def completo(self) -> bool:
-        for i in range(len(self.lista_adj)):
-            if self.grau(self.lista_adj, i) != len(self.lista_adj) - 1:
-                return False
-
-        return True
-
     def ler_arquivo(self, nome_arq):
         try:
             arq = open("dataset/" + nome_arq)
