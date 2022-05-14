@@ -183,29 +183,34 @@ class Grafo:
                             return True
         return False
 
-    def menorDistancia(self, s):
-        menor = -1
+    @staticmethod
+    def getMenorDistancia(lista_v, lista_dist):
+        menorDistancia = float('inf')
+        vertice = None
 
-        for v in self.lista_adj[s]: ## (1, 6)
-            if v < menor:
-                menor = v
+        for v in lista_v:
+            if lista_dist[v] < menorDistancia:
+                menorDistancia = lista_dist[v]
+                vertice = v
 
-        return menor
+        return vertice
 
     def dijkstra(self, s):
-        dist = [9999 for v in self.lista_adj]
-        pred = [None for v in self.lista_adj]
+        dist = [float('inf') for v in range(len(self.lista_adj))]
+        pred = [None for v in range(len(self.lista_adj))]
 
         dist[s] = 0
-        Q = self.lista_adj
+        Q = {v for v in range(len(self.lista_adj))}
 
         while len(Q) != 0:
-            u = self.menorDistancia(s)
-            Q.pop(u)
+            u = self.getMenorDistancia(Q, dist)
+            Q.remove(u)
             for v in self.adjacentes_peso(u):
-                if dist[v] > dist[u] + len(self.adjacentes_peso(v)):
-                    dist[v] = dist[u] + len(self.adjacentes_peso(v))
-                    pred[v] = u
+                peso = v[1]
+                vertice = v[0]
+                if dist[vertice] > dist[u] + peso:
+                    dist[vertice] = dist[u] + peso
+                    pred[vertice] = u
 
         return Q
 
