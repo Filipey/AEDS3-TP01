@@ -101,6 +101,7 @@ class Grafo:
         return vertice
     
     def busca_largura_menor_dist(self, s):
+        inicio = time.process_time()
         dist = [float('inf') for v in range(len(self.lista_adj))]
         pred = [None for v in range(len(self.lista_adj))]
       
@@ -114,12 +115,16 @@ class Grafo:
                     Q.append(v)
                     dist[v] = dist[u] + 1
                     pred[v] = u
-        return dist, pred
+
+        fim = time.process_time()
+        timestamp = fim - inicio
+
+        return dist, pred, timestamp
 
     def dijkstra(self, s):
         inicio = time.process_time()
-        dist = [float('inf') for v in range(len(self.lista_adj))]
-        pred = [None for v in range(len(self.lista_adj))]
+        dist = [float('inf') for _ in range(len(self.lista_adj))]
+        pred = [None for _ in range(len(self.lista_adj))]
 
         dist[s] = 0
         Q = {v for v in range(len(self.lista_adj))}
@@ -200,9 +205,9 @@ class Grafo:
         self.ler_arquivo(nome_arq)
 
         if not self.ponderado():
-            self.formatData(nome_arq, u, v, self.busca_largura_menor_dist(u))
+            return self.formatData(nome_arq, u, v, self.busca_largura_menor_dist(u))
 
         if self.arestaNegativa():
-            self.formatData(nome_arq, u, v, self.bellmanFord(u))
+            return self.formatData(nome_arq, u, v, self.bellmanFord(u))
 
-        self.formatData(nome_arq, u, v, self.dijkstra(u))
+        return self.formatData(nome_arq, u, v, self.dijkstra(u))
