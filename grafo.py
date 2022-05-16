@@ -1,6 +1,4 @@
 import sys
-import time
-from decimal import Decimal
 
 
 class Grafo:
@@ -50,28 +48,6 @@ class Grafo:
     def adjacentes_peso(self, u):
         """Retorna a lista dos vertices adjacentes a u no formato (v, w)"""
         return self.lista_adj[u]
-
-    def adjacentes(self, u):
-        """Retorna a lista dos vertices adjacentes a u"""
-        adj = []
-        for i in range(len(self.lista_adj[u])):
-            (v, w) = self.lista_adj[u][i]
-            adj.append(v)
-        return adj
-
-    def busca_largura(self, s):
-        desc = [0 for _ in range(self.num_vet)]
-        Q = [s]
-        R = [s]
-        desc[s] = 1
-        while Q:
-            u = Q.pop(0)
-            for (v, w) in self.lista_adj[u]:
-                if desc[v] == 0:
-                    Q.append(v)
-                    R.append(v)
-                    desc[v] = 1
-        return R
     
     def ponderado(self) -> bool:
         for v in self.mat_adj:
