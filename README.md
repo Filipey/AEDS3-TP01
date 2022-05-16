@@ -32,7 +32,7 @@ No arquivo main.py, insira os seguintes dados:
 
 ```python
 # Arquivo no formato DIMACS presente na pasta /dataset
-arquivo = arquivo = input("Informe o nome do arquivo presente em /dataset: ")
+arquivo = input("Informe o nome do arquivo presente em /dataset: ")
 
 # Vértice de origem do grafo
 origem = int(input("Informe o vértice de origem: "))
