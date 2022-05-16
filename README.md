@@ -28,23 +28,26 @@ $ git clone https://github.com/Filipey/AEDS3-TP01.git
 $ cd AEDS3-TP01
 ````
 
-No arquivo main.py, edite manualmente as seguintes instruções:
+No arquivo main.py, insira os seguintes dados:
 
 ```python
-# Troque toy.txt para outro arquivo de teste contido em dataset
-grafo.caminhoMinimo("toy.txt")
+# Arquivo no formato DIMACS presente na pasta /dataset
+arquivo = arquivo = input("Informe o nome do arquivo presente em /dataset: ")
 
-# Troque os vértices de origem e destino
-grafo.caminhoMinimo("toy.txt", 0, 3)
+# Vértice de origem do grafo
+origem = int(input("Informe o vértice de origem: "))
+
+# Vértice de destino do grafo
+destino = int(input("Informe o vértice de destino: "))
 ```
 A execução irá retornar no console a seguinte resposta:
 ```json
 {
   "Arquivo de origem": "toy.txt",
   "Origem": 0,
-  "Destino": 3,
-  "Caminho": [0, 1, 2, 3],
-  "Custo": 5,
+  "Destino": 4,
+  "Caminho": [0, 2, 1, 4],
+  "Custo": 7,
   "Tempo": 0.003
 }
 ```
