@@ -120,7 +120,7 @@ class Grafo:
         fim = time.process_time()
         timestamp = Decimal(fim - inicio)
 
-        return dist, pred, timestamp
+        return dist, pred, timestamp, 'Busca em largura'
 
     def dijkstra(self, s):
         inicio = time.process_time()
@@ -143,7 +143,7 @@ class Grafo:
         fim = time.process_time()
         timestamp = Decimal(fim - inicio)
 
-        return dist, pred, timestamp
+        return dist, pred, timestamp, 'Dijkstra'
 
     def bellmanFord(self, s):
         inicio = time.process_time()
@@ -175,13 +175,15 @@ class Grafo:
         fim = time.process_time()
         timestamp = Decimal(fim - inicio)
 
-        return dist, pred, timestamp
+        return dist, pred, timestamp, 'Bellman Ford'
 
     @staticmethod
     def formatData(nome_arq, u, v, data: tuple):
         dist = data.__getitem__(0)
         pred = data.__getitem__(1)
         timestamp = data.__getitem__(2)
+        name = data.__getitem__(3)
+
         caminho = [v]
 
         dist = dist[v]
@@ -196,11 +198,12 @@ class Grafo:
         caminho.reverse()
 
         print(f"Arquivo de origem: {nome_arq}")
+        print(f"Algoritmo usado: {name}")
         print(f"Origem: {u}")
         print(f"Destino: {v}")
         print(f"Caminho: {caminho}")
         print(f"Custo: {dist}")
-        print(f"Tempo: {timestamp}")
+        print(f"Tempo: {timestamp}s")
 
     def caminhoMinimo(self, nome_arq, u, v):
         self.ler_arquivo(nome_arq)
