@@ -102,7 +102,6 @@ class Grafo:
         return vertice
     
     def busca_largura_menor_dist(self, s):
-        inicio = time.process_time()
         dist = [float('inf') for _ in range(len(self.lista_adj))]
         pred = [None for _ in range(len(self.lista_adj))]
       
@@ -117,13 +116,9 @@ class Grafo:
                     dist[v] = dist[u] + 1
                     pred[v] = u
 
-        fim = time.process_time()
-        timestamp = Decimal(fim - inicio)
-
-        return dist, pred, timestamp, 'Busca em largura'
+        return dist, pred, 'Busca em largura'
 
     def dijkstra(self, s):
-        inicio = time.process_time()
         dist = [float('inf') for _ in range(len(self.lista_adj))]
         pred = [None for _ in range(len(self.lista_adj))]
 
@@ -140,13 +135,9 @@ class Grafo:
                     dist[vertice] = dist[u] + peso
                     pred[vertice] = u
 
-        fim = time.process_time()
-        timestamp = Decimal(fim - inicio)
-
-        return dist, pred, timestamp, 'Dijkstra'
+        return dist, pred, 'Dijkstra'
 
     def bellmanFord(self, s):
-        inicio = time.process_time()
         dist = [float('inf') for _ in range(len(self.lista_adj))]
         pred = [None for _ in range(len(self.lista_adj))]
         vertices = [v for v in range(len(self.lista_adj))]
@@ -172,17 +163,13 @@ class Grafo:
             if trocou is False:
                 break
 
-        fim = time.process_time()
-        timestamp = Decimal(fim - inicio)
-
-        return dist, pred, timestamp, 'Bellman Ford'
+        return dist, pred, 'Bellman Ford'
 
     @staticmethod
     def formatData(nome_arq, u, v, data: tuple):
         dist = data.__getitem__(0)
         pred = data.__getitem__(1)
-        timestamp = data.__getitem__(2)
-        name = data.__getitem__(3)
+        name = data.__getitem__(2)
 
         caminho = [v]
 
@@ -203,7 +190,6 @@ class Grafo:
         print(f"Destino: {v}")
         print(f"Caminho: {caminho}")
         print(f"Custo: {dist}")
-        print(f"Tempo: {timestamp}s")
 
     def caminhoMinimo(self, nome_arq, u, v):
         self.ler_arquivo(nome_arq)
