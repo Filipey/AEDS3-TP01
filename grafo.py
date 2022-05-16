@@ -1,5 +1,6 @@
 import sys
 import time
+from decimal import Decimal
 
 
 class Grafo:
@@ -9,12 +10,12 @@ class Grafo:
         self.num_arestas = num_arestas
 
         if lista_adj is None:
-            self.lista_adj = [[] for i in range(num_vet)]
+            self.lista_adj = [[] for _ in range(num_vet)]
         else:
             self.lista_adj = lista_adj
 
         if mat_adj is None:
-            self.mat_adj = [[0 for i in range(num_vet)] for j in range(num_vet)]
+            self.mat_adj = [[0 for _ in range(num_vet)] for _ in range(num_vet)]
         else:
             self.mat_adj = mat_adj
 
@@ -33,8 +34,8 @@ class Grafo:
             str = str.split(" ")
             self.num_vet = int(str[0])
             self.num_arestas = int(str[1])
-            self.lista_adj = [[] for i in range(self.num_vet)]
-            self.mat_adj = [[0 for i in range(self.num_vet)] for j in range(self.num_vet)]
+            self.lista_adj = [[] for _ in range(self.num_vet)]
+            self.mat_adj = [[0 for _ in range(self.num_vet)] for _ in range(self.num_vet)]
 
             for i in range(self.num_arestas):
                 str = arq.readline()
@@ -59,7 +60,7 @@ class Grafo:
         return adj
 
     def busca_largura(self, s):
-        desc = [0 for v in range(self.num_vet)]
+        desc = [0 for _ in range(self.num_vet)]
         Q = [s]
         R = [s]
         desc[s] = 1
@@ -102,8 +103,8 @@ class Grafo:
     
     def busca_largura_menor_dist(self, s):
         inicio = time.process_time()
-        dist = [float('inf') for v in range(len(self.lista_adj))]
-        pred = [None for v in range(len(self.lista_adj))]
+        dist = [float('inf') for _ in range(len(self.lista_adj))]
+        pred = [None for _ in range(len(self.lista_adj))]
       
         Q = [s]
         dist[s] = 0
@@ -117,7 +118,7 @@ class Grafo:
                     pred[v] = u
 
         fim = time.process_time()
-        timestamp = fim - inicio
+        timestamp = Decimal(fim - inicio)
 
         return dist, pred, timestamp
 
@@ -140,14 +141,14 @@ class Grafo:
                     pred[vertice] = u
 
         fim = time.process_time()
-        timestamp = fim - inicio
+        timestamp = Decimal(fim - inicio)
 
         return dist, pred, timestamp
 
     def bellmanFord(self, s):
         inicio = time.process_time()
-        dist = [float('inf') for v in range(len(self.lista_adj))]
-        pred = [None for v in range(len(self.lista_adj))]
+        dist = [float('inf') for _ in range(len(self.lista_adj))]
+        pred = [None for _ in range(len(self.lista_adj))]
         vertices = [v for v in range(len(self.lista_adj))]
         arestas = []
 
@@ -172,7 +173,7 @@ class Grafo:
                 break
 
         fim = time.process_time()
-        timestamp = fim - inicio
+        timestamp = Decimal(fim - inicio)
 
         return dist, pred, timestamp
 
