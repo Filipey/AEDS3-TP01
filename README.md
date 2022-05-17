@@ -42,6 +42,11 @@ destino = int(input("Informe o vértice de destino: "))
 ```
 A execução irá retornar no console a seguinte resposta:
 ```json
+
+# Obs
+Para executar o test do Dijkstra com fila de prioridades modificar a última linha de grafo.py para:
+return self.formatData(nome_arq, u, v, self.dijkstra(u))
+
 {
   "Arquivo de origem": "toy.txt",
   "Origem": 0,
