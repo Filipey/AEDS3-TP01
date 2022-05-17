@@ -3,7 +3,7 @@ import sys
 
 class Grafo:
 
-    def __init__(self, num_vet=0, num_arestas=0, lista_adj=None, mat_adj=None):
+    def __init__(self, num_vet=0, num_arestas=0, lista_adj=None):
         self.num_vet = num_vet
         self.num_arestas = num_arestas
 
@@ -12,30 +12,36 @@ class Grafo:
         else:
             self.lista_adj = lista_adj
 
-        if mat_adj is None:
-            self.mat_adj = [[0 for _ in range(num_vet)] for _ in range(num_vet)]
-        else:
-            self.mat_adj = mat_adj
+    def addAresta(self, source: int, destiny: int, value=1):
+        """
+        Adiciona uma aresta ao grafo de source à destiny com valor value
 
-    def addAresta(self, source, destiny, value=1):
+        :param source: Vértice de origem
+        :param destiny: Vértice de destino
+        :param value: Valor da aresta, caso não seja passado, terá valor 1
+        """
+
         if source < self.num_vet and destiny < self.num_vet:
             self.lista_adj[source].append((destiny, value))
-            self.mat_adj[destiny][source] = value
             self.num_arestas += 1
         else:
             print("Aresta Inválida")
 
-    def ler_arquivo(self, nome_arq):
+    def ler_arquivo(self, nome_arq: str):
+        """
+        Lê o arquivo em /dataset no formato DIMACS e o transforma no objeto Grafo
+
+        :param nome_arq: Nome do arquivo a ser lido em /dataset
+        """
         try:
             arq = open("dataset/" + nome_arq)
             str = arq.readline()
             str = str.split(" ")
             self.num_vet = int(str[0])
-            self.num_arestas = int(str[1])
+            cont_arestas = int(str[1])
             self.lista_adj = [[] for _ in range(self.num_vet)]
-            self.mat_adj = [[0 for _ in range(self.num_vet)] for _ in range(self.num_vet)]
 
-            for i in range(self.num_arestas):
+            for i in range(0, cont_arestas):
                 str = arq.readline()
                 str = str.split(" ")
                 source = int(str[0])
@@ -46,27 +52,47 @@ class Grafo:
             sys.exit("O arquivo não está presente em /dataset")
 
     def adjacentes_peso(self, u):
-        """Retorna a lista dos vertices adjacentes a u no formato (v, w)"""
+        """
+        Retorna a lista dos vertices adjacentes a
+
+        :param u: Vértice a ser estudado
+        :return: Lista com vértices adjacentes a u no formato (v, w)
+        """
         return self.lista_adj[u]
-    
+
     def ponderado(self) -> bool:
-        for v in self.mat_adj:
-            for i in v:
-                if i != 1 and i != 0:
+        """
+        Verifica se um grafo é ponderado
+        :return: True caso seja ponderado e False caso contrário
+        """
+        for el in self.lista_adj:
+            for (v, w) in el:
+                if w != 1:
                     return True
 
         return False
 
     def arestaNegativa(self) -> bool:
-        for v in self.mat_adj:
-            for i in v:
-                if i < 0:
+        """
+        Verifica se um grafo possui aresta de peso negativo
+        :return: True caso possua e False caso contrário
+        """
+        for el in self.lista_adj:
+            for (v, w) in el:
+                if w < 0:
                     return True
 
         return False
 
     @staticmethod
-    def getMenorDistancia(lista_v, lista_dist):
+    def getMenorDistancia(lista_v: list, lista_dist: list) -> int:
+        """
+        Obtem o vértice de menor distância com base na lista de vértices e lista de distâncias
+
+        :param lista_v: Lista de vértices
+        :param lista_dist: Lista de distâncias
+        :return: Vértice com menor distância na lista de distâncias
+        """
         menorDistancia = float('inf')
         vertice = None
 
@@ -76,11 +102,11 @@ class Grafo:
                 vertice = v
 
         return vertice
-    
+
     def busca_largura_menor_dist(self, s):
         dist = [float('inf') for _ in range(len(self.lista_adj))]
         pred = [None for _ in range(len(self.lista_adj))]
-      
+
         Q = [s]
         dist[s] = 0
 
@@ -99,7 +125,7 @@ class Grafo:
         pred = [None for _ in range(len(self.lista_adj))]
 
         dist[s] = 0
-        Q = {v for v in range(len(self.lista_adj))}
+        Q = [v for v in range(len(self.lista_adj))]
 
         while len(Q) != 0:
             u = self.getMenorDistancia(Q, dist)
@@ -143,29 +169,33 @@ class Grafo:
 
     @staticmethod
     def formatData(nome_arq, u, v, data: tuple):
-        dist = data.__getitem__(0)
-        pred = data.__getitem__(1)
-        name = data.__getitem__(2)
+        try:
+            dist = data.__getitem__(0)
+            pred = data.__getitem__(1)
+            name = data.__getitem__(2)
 
-        caminho = [v]
+            caminho = [v]
 
-        dist = dist[v]
+            dist = dist[v]
 
-        i = pred[v]
-        while i in pred:
-            if i is None:
-                break
-            caminho.append(i)
-            i = pred[i]
+            i = pred[v]
+            while i in pred:
+                if i is None:
+                    break
+                caminho.append(i)
+                i = pred[i]
 
-        caminho.reverse()
+            caminho.reverse()
 
-        print(f"Arquivo de origem: {nome_arq}")
-        print(f"Algoritmo usado: {name}")
-        print(f"Origem: {u}")
-        print(f"Destino: {v}")
-        print(f"Caminho: {caminho}")
-        print(f"Custo: {dist}")
+            print(f"Arquivo de origem: {nome_arq}")
+            print(f"Algoritmo usado: {name}")
+            print(f"Origem: {u}")
+            print(f"Destino: {v}")
+            print(f"Caminho: {caminho}")
+            print(f"Custo: {dist}")
+
+        except IndexError:
+            sys.exit(f"O vértice {v} não existe em {nome_arq}")
 
     def caminhoMinimo(self, nome_arq, u, v):
         self.ler_arquivo(nome_arq)
