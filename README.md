@@ -40,12 +40,13 @@ origem = int(input("Informe o vértice de origem: "))
 # Vértice de destino do grafo
 destino = int(input("Informe o vértice de destino: "))
 ```
+```
+Obs: Para executar o teste do Dijkstra com Fila de Prioridades modificar a última linha de grafo.py para:
+return self.formatData(nome_arq, u, v, self.dijkstra_fila_prior(u))
+```
+
 A execução irá retornar no console a seguinte resposta:
 ```json
-
-# Obs
-Para executar o test do Dijkstra com fila de prioridades modificar a última linha de grafo.py para:
-return self.formatData(nome_arq, u, v, self.dijkstra(u))
 
 {
   "Arquivo de origem": "toy.txt",
@@ -56,6 +57,7 @@ return self.formatData(nome_arq, u, v, self.dijkstra(u))
   "Tempo": 0.003
 }
 ```
+
 
 ## Feito com ❤️
 
