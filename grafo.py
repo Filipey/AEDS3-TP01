@@ -1,4 +1,5 @@
 import sys
+import heapq
 
 
 class Grafo:
@@ -166,6 +167,34 @@ class Grafo:
                 break
 
         return dist, pred, 'Bellman Ford'
+    
+    def dijkstra_fila_prior(self, s):
+        n = len(self.lista_adj)
+        dist = [float('inf') for _ in range(n)]
+        pred = [None for _ in range(n)]
+        dist[s] = 0
+
+        visitado = [False for _ in range(n)]
+
+        pq = [(0, s)]
+
+        while len(pq) > 0:
+            _, u = heapq.heappop(pq)
+
+            if visitado[u]:
+                continue
+            visitado[u] = True
+
+            for v in self.adjacentes_peso(u):
+                peso = v[1]
+                vertice = v[0]
+
+                if dist[vertice]>dist[u] + peso:
+                    dist[vertice] = dist[u] + peso
+                    pred[vertice] = u
+                    heapq.heappush(pq, (dist[vertice], vertice))                  
+	    
+        return dist, pred, 'Dijkstra com Fila de Prioridades'
 
     @staticmethod
     def formatData(nome_arq, u, v, data: tuple):
